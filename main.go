@@ -8,63 +8,67 @@ import (
 )
 
 type objA struct {
-	b *objB
+	b      *objB
+	logger lager.Logger
 }
 
-func newA(b *objB) *objA {
+func newA(b *objB, logger lager.Logger) *objA {
 	return &objA{
-		b: b,
+		b:      b,
+		logger: logger.Session("obj-a"),
 	}
 }
 
-func (a *objA) doItA(logger lager.Logger, target string) {
-	logger = logger.Session("obj-a", lager.Data{"target": target})
-	logger.Debug("do-it-a")
-	a.b.doItB(logger)
-	a.b.doAnotherB(logger)
+func (a *objA) doItA(target string) {
+	a.logger.Debug("do-it-a", lager.Data{"target": target})
+	a.b.doItB()
+	a.b.doAnotherB()
 }
 
 type objB struct {
-	c *objC
+	c      *objC
+	logger lager.Logger
 }
 
-func newB(c *objC) *objB {
+func newB(c *objC, logger lager.Logger) *objB {
 	return &objB{
-		c: c,
+		c:      c,
+		logger: logger.Session("obj-b"),
 	}
 }
 
-func (b *objB) doItB(logger lager.Logger) {
-	logger = logger.Session("obj-b")
-	logger.Debug("do-it-b")
-	b.c.doItC(logger)
-	b.c.doItC(logger)
+func (b *objB) doItB() {
+	b.logger.Debug("do-it-b")
+	b.c.doItC()
+	b.c.doItC()
 }
 
-func (b *objB) doAnotherB(logger lager.Logger) {
-	logger = logger.Session("obj-b")
-	logger.Debug("do-another-b")
+func (b *objB) doAnotherB() {
+	b.logger.Debug("do-another-b")
 }
 
-type objC struct{}
-
-func newC() *objC {
-	return &objC{}
+type objC struct {
+	logger lager.Logger
 }
 
-func (c *objC) doItC(logger lager.Logger) {
-	logger = logger.Session("obj-c")
-	logger.Debug("do-it-c")
+func newC(logger lager.Logger) *objC {
+	return &objC{
+		logger: logger.Session("obj-c"),
+	}
+}
+
+func (c *objC) doItC() {
+	c.logger.Debug("do-it-c")
 }
 
 func main() {
 	logger := lager.NewLogger("logging-example")
 	logger.RegisterSink(lager.NewPrettySink(os.Stderr, lager.DEBUG))
 
-	c := newC()
-	b := newB(c)
-	a := newA(b)
+	c := newC(logger)
+	b := newB(c, logger)
+	a := newA(b, logger)
 
-	a.doItA(logger, "foo")
-	a.doItA(logger, "bar")
+	a.doItA("foo")
+	a.doItA("bar")
 }

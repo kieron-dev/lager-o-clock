@@ -18,8 +18,8 @@ func newA(b *objB) *objA {
 }
 
 func (a *objA) doItA(logger lager.Logger, target string) {
-	logger = logger.Session("obj-a")
-	logger.Debug("do-it-a", lager.Data{"target": target})
+	logger = logger.Session("obj-a", lager.Data{"target": target})
+	logger.Debug("do-it-a")
 	a.b.doItB(logger)
 }
 

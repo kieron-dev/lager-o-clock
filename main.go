@@ -21,6 +21,7 @@ func (a *objA) doItA(logger lager.Logger, target string) {
 	logger = logger.Session("obj-a", lager.Data{"target": target})
 	logger.Debug("do-it-a")
 	a.b.doItB(logger)
+	a.b.doAnotherB(logger)
 }
 
 type objB struct {
@@ -38,6 +39,11 @@ func (b *objB) doItB(logger lager.Logger) {
 	logger.Debug("do-it-b")
 	b.c.doItC(logger)
 	b.c.doItC(logger)
+}
+
+func (b *objB) doAnotherB(logger lager.Logger) {
+	logger = logger.Session("obj-b")
+	logger.Debug("do-another-b")
 }
 
 type objC struct{}

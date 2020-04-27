@@ -17,9 +17,9 @@ func newA(b *objB) *objA {
 	}
 }
 
-func (a *objA) doItA(logger lager.Logger) {
+func (a *objA) doItA(logger lager.Logger, target string) {
 	logger = logger.Session("obj-a")
-	logger.Debug("do-it-a")
+	logger.Debug("do-it-a", lager.Data{"target": target})
 	a.b.doItB(logger)
 }
 
@@ -59,6 +59,6 @@ func main() {
 	b := newB(c)
 	a := newA(b)
 
-	a.doItA(logger)
-	a.doItA(logger)
+	a.doItA(logger, "foo")
+	a.doItA(logger, "bar")
 }

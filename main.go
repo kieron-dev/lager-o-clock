@@ -37,6 +37,7 @@ func (b *objB) doItB(logger lager.Logger) {
 	logger = logger.Session("obj-b")
 	logger.Debug("do-it-b")
 	b.c.doItC(logger)
+	b.c.doItC(logger)
 }
 
 type objC struct{}
@@ -58,5 +59,6 @@ func main() {
 	b := newB(c)
 	a := newA(b)
 
+	a.doItA(logger)
 	a.doItA(logger)
 }

@@ -18,7 +18,8 @@ func newA(b *objB) *objA {
 }
 
 func (a *objA) doItA(logger lager.Logger) {
-	logger.Debug("obj-a.do-it-a")
+	logger = logger.Session("obj-a")
+	logger.Debug("do-it-a")
 	a.b.doItB(logger)
 }
 
@@ -33,7 +34,8 @@ func newB(c *objC) *objB {
 }
 
 func (b *objB) doItB(logger lager.Logger) {
-	logger.Debug("obj-b.do-it-b")
+	logger = logger.Session("obj-b")
+	logger.Debug("do-it-b")
 	b.c.doItC(logger)
 }
 
@@ -44,7 +46,8 @@ func newC() *objC {
 }
 
 func (c *objC) doItC(logger lager.Logger) {
-	logger.Debug("obj-c.do-it-c")
+	logger = logger.Session("obj-c")
+	logger.Debug("do-it-c")
 }
 
 func main() {
